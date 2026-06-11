@@ -1,0 +1,80 @@
+import { Request } from 'express';
+
+export interface User {
+    user_id?: number;
+    name: string;
+    email: string;
+    password: string;
+    role?: string;
+}
+
+export interface Movie {
+    movie_id?: number;
+    title: string;
+    release_year: number;
+    ratings?: number;
+    poster_url?: string;
+    description?: string;
+}
+
+export interface Favorite {
+    favorite_id?: number;
+    movie_id: number;
+    user_id: number;
+    created_date: string;
+}
+
+export interface Watched {
+    watch_id?: number;
+    movie_id: number;
+    user_id: number;
+    watched_date: string;
+}
+
+export interface LoginRequest { 
+    username: string;
+    password: string;
+}
+
+export interface RegisterRequest {
+    name: string;
+    email: string;
+    password: string: 
+    role?: ROLE;
+}
+
+export interface JWTPayload {
+    user_id: number;
+    email: string;
+    role: string;
+}
+
+export enum ROLE {
+    ADMIN: 'admin',
+    USER: 'user',
+}
+
+export interface APIResponseWithMessage<T> {
+    success: boolean;
+    message: string;
+    data?: T;
+}
+
+export AuthenticatedResult extends Request {
+    user?: {
+        user_id: number;
+        email: string;
+        role: ROLE;
+    }
+}
+
+export interface updateUserRequest = Partial<Omit<User, 'user_id'>>;
+
+export interface AuthResult{
+    success: boolean;
+    message: string;
+    data?: {
+        user: Omit<User, 'password'>;
+        token: string;
+    }
+}

@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack Movie Watchlist - Complete Learning Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #4CAF50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .topic {
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .topic h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .topic h3 {
+            color: #333;
+            margin: 15px 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .quiz-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .question {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question h4 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .option {
+            margin: 8px 0;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .option.correct {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .option.wrong {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 10px 5px 10px 0;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .interview-section {
+            margin-top: 30px;
+        }
+
+        .interview-question {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .interview-answer {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .show-answer {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .tech-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .completion-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Full-Stack Movie Watchlist</h1>
+            <p>Complete Learning Guide & Interview Preparation</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Progress: 0% Complete</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-tab" onclick="showSection('backend')">Backend</button>
+            <button class="nav-tab" onclick="showSection('frontend')">Frontend</button>
+            <button class="nav-tab" onclick="showSection('database')">Database</button>
+            <button class="nav-tab" onclick="showSection('security')">Security</button>
+            <button class="nav-tab" onclick="showSection('quiz')">MCQ Quiz</button>
+            <button class="nav-tab" onclick="showSection('interview')">Interview Prep</button>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <div class="topic">
+                <h2>🎯 Project Overview</h2>
+                <p>This is a full-stack movie watchlist application that demonstrates modern web development practices. You've built a complete system with authentication, CRUD operations, file uploads, and email verification.</p>
+                
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-icon">BE</div>
+                        <h3>Backend</h3>
+                        <p>Node.js, Express.js, TypeScript</p>
+                        <ul>
+                            <li>RESTful API design</li>
+                            <li>Authentication & Authorization</li>
+                            <li>Email verification system</li>
+                            <li>File upload handling</li>
+                        </ul>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">FE</div>
+                        <h3>Frontend</h3>
+                        <p>React.js, React Router, Context API</p>
+                        <ul>
+                            <li>Component-based architecture</li>
+                            <li>State management</li>
+                            <li>Protected routes</li>
+                            <li>Responsive design</li>
+                        </ul>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">DB</div>
+                        <h3>Database</h3>
+                        <p>MySQL with custom query builders</p>
+                        <ul>
+                            <li>Relational database design</li>
+                            <li>Data modeling</li>
+                            <li>SQL optimization</li>
+                            <li>Database migrations</li>
+                        </ul>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">🔐</div>
+                        <h3>Security</h3>
+                        <p>JWT, bcrypt, Input validation</p>
+                        <ul>
+                            <li>Password hashing</li>
+                            <li>Token-based auth</li>
+                            <li>Input sanitization</li>
+                            <li>CORS configuration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <p>API Endpoints</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <p>Database Tables</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20+</div>
+                        <p>React Components</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <p>TypeScript Coverage</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic">
+                <h2>📁 Project Architecture</h2>
+                <h3>Backend Structure (MVC Pattern)</h3>
+                <div class="code-block">
+backend/
+├── src/
+│   ├── controllers/     # Business logic handlers
+│   ├── models/         # Data access layer
+│   ├── services/       # External service integrations
+│   ├── middleware/     # Request processing
+│   ├── routes/         # API route definitions
+│   └── types/          # TypeScript type definitions
+├── database/           # SQL scripts and DB config
+└── uploads/           # File storage
+                </div>
+
+                <h3>Frontend Structure (Component-based)</h3>
+                <div class="code-block">
+frontend/src/
+├── components/         # Reusable UI components
+├── pages/             # Route-based page components
+├── services/          # API communication
+├── layout/            # App layout components
+└── shared/            # Shared utilities
+                </div>
+            </div>
+        </div>
+
+        <!-- Backend Section -->
+        <div id="backend" class="content-section">
+            <div class="topic">
+                <h2>🔧 Backend Technologies & Concepts</h2>
+                
+                <h3>1. Node.js & Express.js</h3>
+                <p><span class="highlight">Node.js</span> is a JavaScript runtime built on Chrome's V8 engine. <span class="highlight">Express.js</span> is a minimal web framework for Node.js.</p>
+                
+                <div class="code-block">
+// Basic Express server setup
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/movies', movieRoutes);
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+                </div>
+
+                <h3>2. TypeScript Integration</h3>
+                <p><span class="highlight">TypeScript</span> adds static typing to JavaScript, improving code quality and developer experience.</p>
+                
+                <div class="code-block">
+// Type definitions
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    role: 'user' | 'admin';
+}
+
+interface Movie {
+    id: number;
+    title: string;
+    genre: string[];
+    releaseDate: Date;
+    poster?: string;
+}
+
+// Controller with types
+class MovieController {
+    static async createMovie(req: Request, res: Response): Promise<void> {
+        try {
+            const movieData: Partial<Movie> = req.body;
+            // Implementation
+        } catch (error) {
+            // Error handling
+        }
+    }
+}
+                </div>
+
+                <h3>3. MVC Architecture Pattern</h3>
+                <p>Model-View-Controller pattern separates concerns and makes code more maintainable.</p>
+                
+                <div class="code-block">
+// Model Layer - Data Access
+class MovieModel extends BaseModel {
+    static async getAllMovies(filters: any) {
+        const query = `SELECT * FROM movies WHERE 1=1`;
+        return await this.executeQuery(query, []);
+    }
+}
+
+// Controller Layer - Business Logic
+class MovieController {
+    static async getMovies(req: Request, res: Response) {
+        const movies = await MovieModel.getAllMovies(req.query);
+        res.json({ success: true, data: movies });
+    }
+}
+
+// Route Layer - API Endpoints
+router.get('/movies', MovieController.getMovies);
+                </div>
+
+                <h3>4. Middleware Pattern</h3>
+                <p>Middleware functions execute during the request-response cycle.</p>
+                
+                <div class="code-block">
+// Authentication middleware
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ error: 'Invalid token' });
+    }
+};
+
+// Validation middleware
+const validateMovie = (req: Request, res: Response, next: NextFunction) => {
+    const { title, genre } = req.body;
+    
+    if (!title || !genre) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    next();
+};
+                </div>
+
+                <h3>5. Email Service Integration</h3>
+                <div class="code-block">
+// Email service with Nodemailer
+import nodemailer from 'nodemailer';
+
+class EmailService {
+    private static transporter = nodemailer.createTransporter({
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT!),
+        secure: false,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    static async sendVerificationEmail(email: string, code: string) {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Email Verification',
+            html: `Your verification code is: <strong>${code}</strong>`
+        };
+
+        return await this.transporter.sendMail(mailOptions);
+    }
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Frontend Section -->
+        <div id="frontend" class="content-section">
+            <div class="topic">
+                <h2>⚛️ Frontend Technologies & Concepts</h2>
+
+                <h3>1. React.js Fundamentals</h3>
+                <p><span class="highlight">React</span> is a JavaScript library for building user interfaces using components.</p>
+
+                <div class="code-block">
+// Functional Component with Hooks
+import React, { useState, useEffect } from 'react';
+
+const MovieList = () => {
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const response = await fetch('/api/movies');
+                const data = await response.json();
+                setMovies(data.movies);
+            } catch (error) {
+                console.error('Failed to fetch movies:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMovies();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
+    return (
+        <div>
+            {movies.map(movie => (
+                <div key={movie.id}>
+                    <h3>{movie.title}</h3>
+                    <p>{movie.genre.join(', ')}</p>
+                </div>
+            ))}
+        </div>
+    );
+};
+                </div>
+
+                <h3>2. React Router for Navigation</h3>
+                <div class="code-block">
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+function App() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route 
+                    path="/admin" 
+                    element={
+                        <PrivateRoute>
+                            <AdminDashboard />
+                        </PrivateRoute>
+                    } 
+                />
+            </Routes>
+        </BrowserRouter>
+    );
+}
+
+// Protected Route Component
+const PrivateRoute = ({ children }) => {
+    const { isAuthenticated } = useAuth();
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
+                </div>
+
+                <h3>3. Context API for State Management</h3>
+                <div class="code-block">
+// Auth Context
+import { createContext, useContext, useReducer } from 'react';
+
+const AuthContext = createContext();
+
+const authReducer = (state, action) => {
+    switch (action.type) {
+        case 'LOGIN':
+            return { ...state, user: action.payload, isAuthenticated: true };
+        case 'LOGOUT':
+            return { ...state, user: null, isAuthenticated: false };
+        default:
+            return state;
+    }
+};
+
+export const AuthProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(authReducer, {
+        user: null,
+        isAuthenticated: false
+    });
+
+    const login = (userData) => {
+        localStorage.setItem('token', userData.token);
+        dispatch({ type: 'LOGIN', payload: userData.user });
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        dispatch({ type: 'LOGOUT' });
+    };
+
+    return (
+        <AuthContext.Provider value={{ ...state, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => useContext(AuthContext);
+                </div>
+
+                <h3>4. API Service Layer</h3>
+                <div class="code-block">
+// API service with error handling
+class ApiService {
+    static baseURL = 'http://localhost:3000/api';
+
+    static async request(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        const token = localStorage.getItem('token');
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { Authorization: `Bearer ${token}` }),
+                ...options.headers
+            },
+            ...options
+        };
+
+        try {
+            const response = await fetch(url, config);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('API request failed:', error);
+            throw error;
+        }
+    }
+
+    static async getMovies(filters = {}) {
+        const queryString = new URLSearchParams(filters).toString();
+        return this.request(`/movies?${queryString}`);
+    }
+
+    static async createMovie(movieData) {
+        return this.request('/movies', {
+            method: 'POST',
+            body: JSON.stringify(movieData)
+        });
+    }
+}
+                </div>
+
+                <h3>5. Form Handling & Validation</h3>
+                <div class="code-block">
+// Form component with validation
+const MovieForm = ({ onSubmit, initialData = {} }) => {
+    const [formData, setFormData] = useState({
+        title: initialData.title || '',
+        genre: initialData.genre || '',
+        releaseDate: initialData.releaseDate || ''
+    });
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.title.trim()) {
+            newErrors.title = 'Title is required';
+        }
+
+        if (!formData.genre.trim()) {
+            newErrors.genre = 'Genre is required';
+        }
+
+        if (!formData.releaseDate) {
+            newErrors.releaseDate = 'Release date is required';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+            onSubmit(formData);
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear error when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <input
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="Movie Title"
+                />
+                {errors.title && <span className="error">{errors.title}</span>}
+            </div>
+            {/* Other fields... */}
+            <button type="submit">Save Movie</button>
+        </form>
+    );
+};
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Section -->
+        <div id="database" class="content-section">
+            <div class="topic">
+                <h2>🗄️ Database Design & SQL</h2>
+
+                <h3>1. Database Schema Design</h3>
+                <div class="code-block">
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Movies table
+CREATE TABLE movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    genre JSON,  -- Store array as JSON
+    release_date DATE,
+    poster VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- User favorites (Many-to-Many relationship)
+CREATE TABLE user_favorites (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    movie_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_movie (user_id, movie_id)
+);
+
+-- Email verifications
+CREATE TABLE email_verifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    code VARCHAR(10) NOT NULL,
+    user_data JSON,
+    expires_at TIMESTAMP,
+    used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+                </div>
+
+                <h3>2. Query Builder Pattern</h3>
+                <div class="code-block">
+// Base Model with query builder functionality
+class BaseModel {
+    static tableName = '';
+
+    static async executeQuery(query: string, params: any[] = []) {
+        // Database connection and query execution
+        return new Promise((resolve, reject) => {
+            db.query(query, params, (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+    }
+
+    static async findById(id: number) {
+        const query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
+        const results = await this.executeQuery(query, [id]);
+        return results[0] || null;
+    }
+
+    static async findAll(filters = {}, orderBy = 'id', order = 'ASC') {
+        let query = `SELECT * FROM ${this.tableName} WHERE 1=1`;
+        const params = [];
+
+        // Dynamic filter building
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== '') {
+                query += ` AND ${key} = ?`;
+                params.push(value);
+            }
+        });
+
+        query += ` ORDER BY ${orderBy} ${order}`;
+        return await this.executeQuery(query, params);
+    }
+
+    static async create(data: any) {
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+        const placeholders = keys.map(() => '?').join(', ');
+
+        const query = `
+            INSERT INTO ${this.tableName} (${keys.join(', ')})
+            VALUES (${placeholders})
+        `;
+
+        const result = await this.executeQuery(query, values);
+        return { id: result.insertId, ...data };
+    }
+
+    static async update(id: number, data: any) {
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+        const setClause = keys.map(key => `${key} = ?`).join(', ');
+
+        const query = `
+            UPDATE ${this.tableName}
+            SET ${setClause}
+            WHERE id = ?
+        `;
+
+        await this.executeQuery(query, [...values, id]);
+        return await this.findById(id);
+    }
+
+    static async delete(id: number) {
+        const query = `DELETE FROM ${this.tableName} WHERE id = ?`;
+        return await this.executeQuery(query, [id]);
+    }
+}
+                </div>
+
+                <h3>3. Advanced SQL Queries</h3>
+                <div class="code-block">
+-- Complex movie search with filters
+SELECT DISTINCT m.*
+FROM movies m
+WHERE 1=1
+  AND (? IS NULL OR m.title LIKE CONCAT('%', ?, '%'))
+  AND (? IS NULL OR JSON_CONTAINS(m.genre, JSON_QUOTE(?)))
+  AND (? IS NULL OR m.release_date >= ?)
+  AND (? IS NULL OR m.release_date <= ?)
+ORDER BY m.created_at DESC
+LIMIT ? OFFSET ?;
+
+-- Get user's favorite movies with movie details
+SELECT 
+    m.*,
+    uf.created_at as favorited_at
+FROM user_favorites uf
+INNER JOIN movies m ON uf.movie_id = m.id
+WHERE uf.user_id = ?
+ORDER BY uf.created_at DESC;
+
+-- Movie statistics
+SELECT 
+    COUNT(*) as total_movies,
+    COUNT(DISTINCT JSON_EXTRACT(genre, '$[*]')) as unique_genres,
+    AVG(YEAR(CURRENT_DATE) - YEAR(release_date)) as avg_age
+FROM movies;
+
+-- Top genres by movie count
+SELECT 
+    genre_value as genre,
+    COUNT(*) as movie_count
+FROM movies m
+CROSS JOIN JSON_TABLE(
+    m.genre, 
+    '$[*]' COLUMNS (genre_value VARCHAR(50) PATH '$')
+) as jt
+GROUP BY genre_value
+ORDER BY movie_count DESC
+LIMIT 10;
+                </div>
+
+                <h3>4. Database Indexing Strategy</h3>
+                <div class="code-block">
+-- Performance indexes
+CREATE INDEX idx_movies_title ON movies(title);
+CREATE INDEX idx_movies_release_date ON movies(release_date);
+CREATE INDEX idx_user_favorites_user_id ON user_favorites(user_id);
+CREATE INDEX idx_email_verifications_email ON email_verifications(email);
+CREATE INDEX idx_email_verifications_expires ON email_verifications(expires_at);
+
+-- Composite indexes for common queries
+CREATE INDEX idx_user_favorites_user_movie ON user_favorites(user_id, movie_id);
+CREATE INDEX idx_movies_date_title ON movies(release_date, title);
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Section -->
+        <div id="security" class="content-section">
+            <div class="topic">
+                <h2>🔐 Security Implementation</h2>
+
+                <h3>1. Password Security</h3>
+                <div class="code-block">
+import bcrypt from 'bcrypt';
+
+class SecurityService {
+    // Hash password before storing
+    static async hashPassword(password: string): Promise<string> {
+        const saltRounds = 12; // Higher = more secure but slower
+        return await bcrypt.hash(password, saltRounds);
+    }
+
+    // Verify password during login
+    static async verifyPassword(password: string, hash: string): Promise<boolean> {
+        return await bcrypt.compare(password, hash);
+    }
+
+    // Password strength validation
+    static validatePassword(password: string): { isValid: boolean; errors: string[] } {
+        const errors = [];
+
+        if (password.length < 8) {
+            errors.push('Password must be at least 8 characters long');
+        }
+
+        if (!/[A-Z]/.test(password)) {
+            errors.push('Password must contain at least one uppercase letter');
+        }
+
+        if (!/[a-z]/.test(password)) {
+            errors.push('Password must contain at least one lowercase letter');
+        }
+
+        if (!/\d/.test(password)) {
+            errors.push('Password must contain at least one number');
+        }
+
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            errors.push('Password must contain at least one special character');
+        }
+
+        return { isValid: errors.length === 0, errors };
+    }
+}
+                </div>
+
+                <h3>2. JWT Authentication</h3>
+                <div class="code-block">
+import jwt from 'jsonwebtoken';
+
+class AuthService {
+    // Generate JWT token
+    static generateToken(payload: any): string {
+        return jwt.sign(
+            payload,
+            process.env.JWT_SECRET!,
+            { 
+                expiresIn: '24h',
+                issuer: 'movie-watchlist',
+                audience: 'movie-users'
+            }
+        );
+    }
+
+    // Verify JWT token
+    static verifyToken(token: string): any {
+        try {
+            return jwt.verify(token, process.env.JWT_SECRET!);
+        } catch (error) {
+            if (error instanceof jwt.TokenExpiredError) {
+                throw new Error('Token has expired');
+            } else if (error instanceof jwt.JsonWebTokenError) {
+                throw new Error('Invalid token');
+            } else {
+                throw new Error('Token verification failed');
+            }
+        }
+    }
+
+    // Refresh token mechanism
+    static generateRefreshToken(userId: number): string {
+        return jwt.sign(
+            { userId, type: 'refresh' },
+            process.env.REFRESH_TOKEN_SECRET!,
+            { expiresIn: '7d' }
+        );
+    }
+
+    static async refreshAccessToken(refreshToken: string): Promise<string> {
+        const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
+        
+        if (payload.type !== 'refresh') {
+            throw new Error('Invalid refresh token');
+        }
+
+        // Generate new access token
+        return this.generateToken({
+            userId: payload.userId,
+            type: 'access'
+        });
+    }
+}
+                </div>
+
+                <h3>3. Input Validation & Sanitization</h3>
+                <div class="code-block">
+import validator from 'validator';
+
+class ValidationService {
+    // Email validation
+    static validateEmail(email: string): boolean {
+        return validator.isEmail(email) && email.length <= 100;
+    }
+
+    // Sanitize HTML input to prevent XSS
+    static sanitizeInput(input: string): string {
+        return validator.escape(input.trim());
+    }
+
+    // Movie data validation
+    static validateMovieData(data: any): { isValid: boolean; errors: string[] } {
+        const errors = [];
+
+        // Title validation
+        if (!data.title || typeof data.title !== 'string') {
+            errors.push('Title is required and must be a string');
+        } else if (data.title.length > 255) {
+            errors.push('Title must be less than 255 characters');
+        }
+
+        // Genre validation
+        if (!Array.isArray(data.genre) || data.genre.length === 0) {
+            errors.push('At least one genre must be specified');
+        }
+
+        // Release date validation
+        if (data.release_date && !validator.isDate(data.release_date)) {
+            errors.push('Invalid release date format');
+        }
+
+        return { isValid: errors.length === 0, errors };
+    }
+
+    // File upload validation
+    static validateImageUpload(file: any): { isValid: boolean; error?: string } {
+        // Check file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            return { isValid: false, error: 'File size must be less than 5MB' };
+        }
+
+        // Check file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return { isValid: false, error: 'Only image files are allowed' };
+        }
+
+        return { isValid: true };
+    }
+}
+                </div>
+
+                <h3>4. Rate Limiting & CORS</h3>
+                <div class="code-block">
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+
+// Rate limiting configuration
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5, // More restrictive for auth endpoints
+    message: 'Too many authentication attempts, please try again later',
+});
+
+// CORS configuration
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://yourdomain.com']
+        : ['http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Apply to Express app
+app.use(cors(corsOptions));
+app.use('/api/', apiLimiter);
+app.use('/api/auth/', authLimiter);
+                </div>
+
+                <h3>5. Environment Variables & Secrets</h3>
+                <div class="code-block">
+// .env.example
+NODE_ENV=development
+PORT=3000
+
+# Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=movie_watchlist
+DB_USER=your_username
+DB_PASS=your_password
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+REFRESH_TOKEN_SECRET=your-refresh-token-secret-min-32-chars
+
+# Email
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+
+# File Upload
+UPLOAD_DIR=uploads
+MAX_FILE_SIZE=5242880
+
+# Security configuration
+class ConfigService {
+    static validateConfig() {
+        const required = [
+            'JWT_SECRET',
+            'DB_HOST',
+            'DB_USER',
+            'DB_PASS',
+            'DB_NAME'
+        ];
+
+        const missing = required.filter(key => !process.env[key]);
+        
+        if (missing.length > 0) {
+            throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+        }
+
+        // Validate JWT secret strength
+        if (process.env.JWT_SECRET!.length < 32) {
+            throw new Error('JWT_SECRET must be at least 32 characters long');
+        }
+    }
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz" class="content-section">
+            <div class="topic">
+                <h2>📝 MCQ Quiz - Test Your Knowledge</h2>
+                <div class="quiz-section">
+                    <div id="quizContainer"></div>
+                    <button class="btn" onclick="startQuiz()">Start Quiz</button>
+                    <button class="btn btn-secondary" onclick="resetQuiz()" style="display: none;" id="resetBtn">Reset Quiz</button>
+                    <div id="scoreDisplay" class="score-display" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Section -->
+        <div id="interview" class="content-section">
+            <div class="topic">
+                <h2>💼 Interview Questions & Answers</h2>
+                <div class="interview-section">
+                    <div class="interview-question">
+                        <h4>1. Explain the MVC architecture pattern used in your project.</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> MVC (Model-View-Controller) is an architectural pattern that separates application logic into three interconnected components:</p>
+                            <ul>
+                                <li><strong>Model:</strong> Handles data logic and database operations (e.g., MovieModel, UserModel)</li>
+                                <li><strong>View:</strong> Presents data to users (React components)</li>
+                                <li><strong>Controller:</strong> Handles user input and coordinates between Model and View (e.g., MovieController)</li>
+                            </ul>
+                            <p>This separation improves code maintainability, testability, and allows multiple developers to work on different parts simultaneously.</p>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>2. How do you handle authentication and authorization in your application?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> I implement a multi-layered security approach:</p>
+                            <ul>
+                                <li><strong>Authentication:</strong> JWT tokens with email verification</li>
+                                <li><strong>Password Security:</strong> bcrypt hashing with salt rounds</li>
+                                <li><strong>Authorization:</strong> Role-based access control (user/admin)</li>
+                                <li><strong>Token Management:</strong> Access tokens (24h) and refresh tokens (7d)</li>
+                                <li><strong>Middleware:</strong> Protect routes with authentication middleware</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>3. What are React Hooks and how do you use them in your project?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> React Hooks are functions that let you use state and lifecycle features in functional components:</p>
+                            <ul>
+                                <li><strong>useState:</strong> Manage component state (form data, loading states)</li>
+                                <li><strong>useEffect:</strong> Handle side effects (API calls, subscriptions)</li>
+                                <li><strong>useContext:</strong> Access context values (AuthContext)</li>
+                                <li><strong>useNavigate:</strong> Programmatic navigation</li>
+                                <li><strong>Custom Hooks:</strong> useAuth for authentication logic</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>4. How do you optimize database queries in your application?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> I use several optimization techniques:</p>
+                            <ul>
+                                <li><strong>Indexing:</strong> Create indexes on frequently queried columns</li>
+                                <li><strong>Query Builder:</strong> Dynamic query building to avoid unnecessary WHERE clauses</li>
+                                <li><strong>Pagination:</strong> LIMIT and OFFSET to prevent large result sets</li>
+                                <li><strong>Connection Pooling:</strong> Reuse database connections</li>
+                                <li><strong>Prepared Statements:</strong> Prevent SQL injection and improve performance</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>5. Explain error handling strategy in your full-stack application.</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> I implement comprehensive error handling:</p>
+                            <ul>
+                                <li><strong>Backend:</strong> Try-catch blocks, error middleware, HTTP status codes</li>
+                                <li><strong>Frontend:</strong> Error boundaries, loading states, user-friendly messages</li>
+                                <li><strong>Validation:</strong> Input validation on both client and server</li>
+                                <li><strong>Logging:</strong> Console logs and potential external logging service</li>
+                                <li><strong>Graceful Degradation:</strong> App continues functioning with partial failures</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>6. How would you scale this application for production?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> Scaling strategies I would implement:</p>
+                            <ul>
+                                <li><strong>Database:</strong> Read replicas, connection pooling, query optimization</li>
+                                <li><strong>Caching:</strong> Redis for session storage and frequently accessed data</li>
+                                <li><strong>CDN:</strong> Serve static assets (images, CSS, JS) from CDN</li>
+                                <li><strong>Load Balancing:</strong> Multiple server instances behind load balancer</li>
+                                <li><strong>Monitoring:</strong> Application performance monitoring and logging</li>
+                                <li><strong>Security:</strong> Rate limiting, HTTPS, security headers</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>7. What testing strategies would you implement?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> Comprehensive testing approach:</p>
+                            <ul>
+                                <li><strong>Unit Tests:</strong> Jest for individual functions and components</li>
+                                <li><strong>Integration Tests:</strong> Test API endpoints and database operations</li>
+                                <li><strong>Component Tests:</strong> React Testing Library for UI components</li>
+                                <li><strong>E2E Tests:</strong> Cypress or Playwright for user workflows</li>
+                                <li><strong>API Tests:</strong> Postman or Supertest for endpoint testing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="interview-question">
+                        <h4>8. How do you handle file uploads securely?</h4>
+                        <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+                        <div class="interview-answer">
+                            <p><strong>Answer:</strong> Secure file upload implementation:</p>
+                            <ul>
+                                <li><strong>Validation:</strong> File type, size, and content validation</li>
+                                <li><strong>Storage:</strong> Store files outside web root</li>
+                                <li><strong>Naming:</strong> Generate unique filenames to prevent conflicts</li>
+                                <li><strong>Scanning:</strong> Virus scanning for uploaded files</li>
+                                <li><strong>Limits:</strong> Size and rate limiting</li>
+                                <li><strong>CDN/Cloud:</strong> Use AWS S3 or similar for production</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            updateProgress();
+        }
+
+        // Progress tracking
+        let completedSections = new Set();
+
+        function updateProgress() {
+            const totalSections = 7;
+            const currentSection = document.querySelector('.content-section.active').id;
+            completedSections.add(currentSection);
+            
+            const progressPercentage = (completedSections.size / totalSections) * 100;
+            document.getElementById('progressFill').style.width = progressPercentage + '%';
+            document.getElementById('progressText').textContent = `Progress: ${Math.round(progressPercentage)}% Complete`;
+        }
+
+        // Quiz functionality
+        const quizQuestions = [
+            {
+                question: "What is the primary purpose of middleware in Express.js?",
+                options: [
+                    "To handle database connections",
+                    "To process requests between the server receiving a request and sending a response",
+                    "To render HTML templates",
+                    "To manage user sessions only"
+                ],
+                correct: 1,
+                explanation: "Middleware functions execute during the request-response cycle and can modify request/response objects, end the cycle, or call the next middleware."
+            },
+            {
+                question: "Which React Hook is used for side effects like API calls?",
+                options: [
+                    "useState",
+                    "useContext",
+                    "useEffect",
+                    "useReducer"
+                ],
+                correct: 2,
+                explanation: "useEffect is used for side effects like API calls, subscriptions, or manually changing the DOM."
+            },
+            {
+                question: "What is the main advantage of using JWT tokens for authentication?",
+                options: [
+                    "They are stored in the database",
+                    "They are stateless and contain encoded user information",
+                    "They never expire",
+                    "They can only be used with HTTPS"
+                ],
+                correct: 1,
+                explanation: "JWTs are stateless, meaning the server doesn't need to store session information, and they contain encoded user data."
+            },
+            {
+                question: "In the MVC pattern, what is the role of the Controller?",
+                options: [
+                    "Manage database schemas",
+                    "Handle user interface rendering",
+                    "Process user input and coordinate between Model and View",
+                    "Store application data"
+                ],
+                correct: 2,
+                explanation: "Controllers handle user input, process business logic, and coordinate between the Model (data) and View (presentation)."
+            },
+            {
+                question: "Which HTTP status code should be returned for successful resource creation?",
+                options: [
+                    "200 OK",
+                    "201 Created",
+                    "204 No Content",
+                    "302 Found"
+                ],
+                correct: 1,
+                explanation: "201 Created indicates that a new resource has been successfully created."
+            },
+            {
+                question: "What is the purpose of bcrypt in password security?",
+                options: [
+                    "Encrypt passwords with a secret key",
+                    "Hash passwords with a salt for secure storage",
+                    "Compress password data",
+                    "Generate random passwords"
+                ],
+                correct: 1,
+                explanation: "bcrypt hashes passwords with a salt, making them secure for database storage and resistant to rainbow table attacks."
+            },
+            {
+                question: "Which SQL clause is used to prevent retrieving too many records at once?",
+                options: [
+                    "WHERE",
+                    "ORDER BY",
+                    "LIMIT",
+                    "GROUP BY"
+                ],
+                correct: 2,
+                explanation: "LIMIT clause restricts the number of records returned by a query, essential for pagination and performance."
+            },
+            {
+                question: "What is the main benefit of using TypeScript in a Node.js project?",
+                options: [
+                    "Faster runtime performance",
+                    "Static type checking and better IDE support",
+                    "Smaller bundle size",
+                    "Built-in database connectivity"
+                ],
+                correct: 1,
+                explanation: "TypeScript provides static type checking, better IDE support, and helps catch errors at compile time."
+            },
+            {
+                question: "In React Context API, what is the purpose of a Provider?",
+                options: [
+                    "To connect to external APIs",
+                    "To make context values available to child components",
+                    "To handle component routing",
+                    "To manage component lifecycle"
+                ],
+                correct: 1,
+                explanation: "A Provider makes context values available to all child components in the component tree."
+            },
+            {
+                question: "What is the primary security concern with file uploads?",
+                options: [
+                    "File size limitations",
+                    "Network bandwidth",
+                    "Malicious file execution and server compromise",
+                    "Storage space"
+                ],
+                correct: 2,
+                explanation: "The main security concern is malicious files that could be executed on the server or compromise security."
+            }
+        ];
+
+        let currentQuiz = {
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            answered: 0
+        };
+
+        function startQuiz() {
+            currentQuiz = {
+                questions: [...quizQuestions].sort(() => Math.random() - 0.5), // Shuffle questions
+                currentIndex: 0,
+                score: 0,
+                answered: 0
+            };
+            
+            document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+            event.target.style.display = 'none';
+            
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const container = document.getElementById('quizContainer');
+            const question = currentQuiz.questions[currentQuiz.currentIndex];
+            
+            container.innerHTML = `
+                <div class="question">
+                    <h4>Question ${currentQuiz.currentIndex + 1} of ${currentQuiz.questions.length}</h4>
+                    <p>${question.question}</p>
+                    <ul class="options">
+                        ${question.options.map((option, index) => `
+                            <li class="option" onclick="selectOption(${index})">${option}</li>
+                        `).join('')}
+                    </ul>
+                    <button class="btn" onclick="nextQuestion()" id="nextBtn" style="display: none;">Next Question</button>
+                </div>
+            `;
+        }
+
+        function selectOption(selectedIndex) {
+            const question = currentQuiz.questions[currentQuiz.currentIndex];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    option.classList.add('wrong');
+                }
+                option.style.pointerEvents = 'none';
+            });
+            
+            options[selectedIndex].classList.add('selected');
+            
+            if (selectedIndex === question.correct) {
+                currentQuiz.score++;
+            }
+            
+            currentQuiz.answered++;
+            
+            // Show explanation
+            const questionDiv = document.querySelector('.question');
+            questionDiv.innerHTML += `<p style="margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 5px;"><strong>Explanation:</strong> ${question.explanation}</p>`;
+            
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuiz.currentIndex++;
+            
+            if (currentQuiz.currentIndex < currentQuiz.questions.length) {
+                renderQuizQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            const container = document.getElementById('quizContainer');
+            const percentage = (currentQuiz.score / currentQuiz.questions.length * 100).toFixed(1);
+            
+            let message = '';
+            if (percentage >= 80) {
+                message = '🎉 Excellent! You have a strong understanding of the concepts.';
+            } else if (percentage >= 60) {
+                message = '👍 Good job! Consider reviewing some topics for better understanding.';
+            } else {
+                message = '📚 Keep studying! Review the learning materials and try again.';
+            }
+            
+            container.innerHTML = '';
+            
+            document.getElementById('scoreDisplay').innerHTML = `
+                <h3>Quiz Complete!</h3>
+                <p style="font-size: 1.5rem; margin: 10px 0;">
+                    Score: ${currentQuiz.score} / ${currentQuiz.questions.length} (${percentage}%)
+                </p>
+                <p>${message}</p>
+            `;
+            
+            document.getElementById('scoreDisplay').style.display = 'block';
+            document.getElementById('resetBtn').style.display = 'inline-block';
+        }
+
+        function resetQuiz() {
+            document.getElementById('quizContainer').innerHTML = '';
+            document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('resetBtn').style.display = 'none';
+            document.querySelector('#quiz .btn').style.display = 'inline-block';
+        }
+
+        // Interview answers toggle
+        function toggleAnswer(button) {
+            const answer = button.nextElementSibling;
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+                button.textContent = 'Hide Answer';
+            } else {
+                answer.style.display = 'none';
+                button.textContent = 'Show Answer';
+            }
+        }
+
+        // Initialize progress tracking
+        updateProgress();
+    </script>
+</body>
+</html>

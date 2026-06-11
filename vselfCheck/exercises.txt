@@ -1,0 +1,303 @@
+# 15 Basic Backend Practice Exercises (Fundamentals)
+import { Request, Response, NextFunction } from 'express'; // treat this as global import 
+import express from 'express';
+import asyncHandler from 'validate.ts';
+import bcrypt from 'bcrypt';
+import dbConnection from 'db.ts';
+---
+
+## 11. Create a Simple Middleware to Log Requests
+Write middleware that logs "Request received" for every request.
+// Hint: Use console.log() and don't forget to call next()
+
+// YOUR ANSWER HAD ERRORS:
+// ❌ Typo: NexFunction instead of NextFunction
+// ❌ Unnecessary try-catch and await for simple logging
+// ❌ Wrong variable name: Request instead of req
+
+// CORRECT ANSWER:
+export const logRequest = (req: Request, res: Response, next: NextFunction) => {
+    console.log("Request received");
+    next();
+}
+
+## 12. Build a GET Endpoint for All Users
+Create GET /api/users that returns all users from your database.
+// Hint: Use UserModel.findAll() or similar method in your controller
+
+// YOUR ANSWER HAD ERRORS:
+// ❌ express.config() doesn't exist - should be express.json()
+// ❌ Missing async/await for database operation
+// ❌ Should use controller pattern, not direct model call
+
+// CORRECT ANSWER:
+const app = express();
+app.use(express.json());
+app.get('/api/users', async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.findAll();
+        res.json({ success: true, data: users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching users' });
+    }
+});
+
+## 13. Find the Bug - Missing Return Statement
+```typescript
+app.post('/users', (req, res) => {
+    if (!req.body.email) {
+        return res.status(400).json({ success: false, message: 'Email required' }); // ✅ CORRECT - You fixed it!
+    }
+    res.status(201).json({ success: true, message: 'User created' });
+});
+```
+// ✅ CORRECT - You added the return statement properly!
+
+## 14. Create a POST Endpoint to Add a Movie
+Build POST /api/movies that accepts title, genre, year and saves to database.
+// Hint: Extract data from req.body, validate required fields, call MovieModel.create()
+
+// YOUR ANSWER HAD ERRORS:
+// ❌ Missing async keyword
+// ❌ Typo: moviewData instead of movieData
+// ❌ Wrong status code for success (should be 201)
+// ❌ Missing return statements
+
+// CORRECT ANSWER:
+app.post('/api/movies', async (req: Request, res: Response) => {
+    const { title, genre, year } = req.body;
+
+    if (!title || !genre || !year) {
+        return res.status(400).json({ success: false, message: "All fields are required!" });
+    }
+
+    const movieData = { title, genre, year };
+    
+    try {
+        const newMovie = await MovieModel.create(movieData);
+        res.status(201).json({ success: true, message: "Movie created successfully!", data: newMovie });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Unable to create movie" });
+    }
+});
+
+## 15. Write Middleware to Check Required Fields
+Create middleware that checks if req.body has required fields: ['name', 'email'].
+// Hint: Loop through required fields, check if each exists in req.body
+
+// YOUR ANSWER HAD MINOR ERRORS:
+// ❌ Typo: NexFunction instead of NextFunction
+// ❌ Redundant check for req.body existence
+
+// CORRECT ANSWER:
+export const fieldValidation = (requiredFields: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const missingFields = requiredFields.filter(field => !req.body[field]);
+        
+        if (missingFields.length > 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: `Missing required fields: ${missingFields.join(', ')}` 
+            });
+        }
+        next();
+    }
+}
+
+## 16. Find the Bug - Wrong HTTP Status Code
+```typescript
+app.delete('/users/:id', async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.params.id);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' }); // ✅ CORRECT - You fixed the status code!
+        }
+        
+        await UserModel.delete(req.params.id);
+        res.status(200).json({ message: 'User deleted' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error deleting user!" });
+    }
+});
+```
+// ✅ MOSTLY CORRECT - You fixed the main bug (404 status)! Minor: Use 500 for server errors instead of 400.
+
+## 17. Build a GET Endpoint for Single User
+Create GET /api/users/:id that returns one user by ID.
+// Hint: Use req.params.id to get the ID, check if user exists before returning
+
+// YOUR ANSWER HAD ERRORS:
+// ❌ Missing leading slash in route: 'api/users/:id' should be '/api/users/:id'
+// ❌ Not sending response properly
+// ❌ Wrong logic flow
+
+// CORRECT ANSWER:
+app.get('/api/users/:id', async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const user = await UserModel.getUserById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found!" });
+        }
+        
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error fetching user!" });
+    }
+});
+
+## 18. Create a Service Function for User Registration
+Write a service function that handles user creation logic (hash password, check duplicates).
+// Hint: Move business logic from controller to service, return success/error
+
+// YOUR ANSWER HAD ERRORS:
+// ❌ Multiple typos: userByname, console.err, row instead of rows
+// ❌ Missing return type annotations
+// ❌ Incomplete logic - didn't actually register user
+
+// CORRECT ANSWER:
+class UserService {
+    static async hashPassword(password: string): Promise<string> {
+        return await bcrypt.hash(password, 12);
+    }
+
+    static async findUserByEmailOrName(identifier: string): Promise<User | null> {
+        try {
+            const query = 'SELECT * FROM users WHERE email = ? OR name = ?';
+            const [rows] = await dbConnection.execute(query, [identifier, identifier]);
+            if (rows.length > 0) {
+                return rows[0] as User;
+            }
+            return null;
+        } catch (err) {
+            console.error("Error finding user", err);
+            return null;
+        }
+    }
+
+    static async registerUser(userData: { name: string, email: string, password: string }) {
+        try {
+            // Check if user exists
+            const existingUser = await this.findUserByEmailOrName(userData.email);
+            if (existingUser) {
+                return { success: false, message: "User already exists" };
+            }
+
+            // Hash password and create user
+            const hashedPassword = await this.hashPassword(userData.password);
+            const newUser = await UserModel.create({
+                ...userData,
+                password: hashedPassword
+            });
+
+            return { success: true, data: newUser };
+        } catch (err) {
+            console.error("Error registering user", err);
+            return { success: false, message: "Registration failed" };
+        }
+    }
+}
+
+## 19. Find the Bug - Missing Async/Await
+```typescript
+app.get('/users', async (req, res) => {
+    const users = await UserModel.findAll(); // ✅ CORRECT - You added await!
+    res.json(users);
+});
+```
+// ✅ CORRECT - You fixed the missing await!
+
+## 20. Build a PUT Endpoint to Update User
+Create PUT /api/users/:id that updates user name and email.
+// Hint: Get ID from params, get new data from body, check if user exists first
+
+// YOUR ANSWER WAS INCOMPLETE AND HAD ERRORS:
+// ❌ Typo: usereId instead of userId
+// ❌ Wrong SQL syntax
+// ❌ Incomplete implementation
+
+// CORRECT ANSWER:
+app.put('/api/users/:id', async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const { name, email } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "User ID is required" });
+        }
+
+        // Check if user exists
+        const existingUser = await UserModel.getUserById(userId);
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Update user
+        const updatedUser = await UserModel.updateById(userId, { name, email });
+        res.json({ success: true, message: "User updated successfully", data: updatedUser });
+
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error updating user" });
+    }
+});
+
+## 21. Write Middleware to Validate Email Format
+Create middleware that checks if email in req.body is a valid email format.
+// Hint: Use regex or simple string checks like includes('@') and includes('.')
+
+// YOU DIDN'T ATTEMPT THIS - HERE'S THE ANSWER:
+export const validateEmailFormat = (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    
+    if (!email) {
+        return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email format" });
+    }
+
+    next();
+};
+
+## 22. Find the Bug - Incorrect Route Order
+```typescript
+// The bug is that both routes have the same path pattern!
+// /users/profile will be treated as /users/:id where id="profile"
+
+// CORRECT ORDER:
+app.get('/api/users/profile', (req, res) => {  // Specific route first
+    res.json({ message: 'User profile' });
+});
+
+app.get('/api/users/:id', (req, res) => {      // Dynamic route second
+    res.json({ user: `User ${req.params.id}` });
+});
+```
+// The specific route (/users/profile) must come BEFORE the dynamic route (/users/:id)
+
+## 23. Create a Controller for Movie Operations
+Build a MovieController class with methods: getAllMovies, getMovieById, createMovie.
+// Hint: Each method should handle req, res and call appropriate service/model methods
+
+## 24. Build a Simple Error Handling Middleware
+Create middleware that catches errors and sends { success: false, message: error.message }.
+// Hint: Error middleware takes 4 parameters: (err, req, res, next)
+
+## 25. Find the Bug - Forgotten Database Connection
+```typescript
+app.post('/users', async (req, res) => {
+    const { name, email } = req.body;
+    const user = await UserModel.create({ name, email });
+    res.json(user);
+});
+```
+// Hint: This might work, but what if UserModel.create() throws an error?
+
+---
+
+*Practice these BASIC exercises first to master the fundamentals!*

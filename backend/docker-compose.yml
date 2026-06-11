@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: movies_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: movies_watchlist
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql  # Persistent data volume
+    networks:
+      - movies_network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - movies_network
+
+volumes:
+  mysql_data:  # Named volume for persistent data
+
+networks:
+  movies_network:
+    driver: bridge

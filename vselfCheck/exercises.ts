@@ -1,0 +1,1 @@
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
